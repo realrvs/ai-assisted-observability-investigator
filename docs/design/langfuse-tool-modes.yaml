@@ -1,0 +1,24 @@
+# LangfuseTool: режимы выдачи трейса
+# Версия: 2.1
+
+langfuse_tool_modes:
+  summarize:
+    description: "Компактная сводка трейса (по умолчанию)"
+    model: "T-lite-it-2.1"
+    returns:
+      - trace_id
+      - total_latency_ms
+      - spans: [{name, type, status, latency_ms, error, tokens}]
+      - anomalies: "[спаны с error или latency > p95]"
+    size: "< 2.5k токенов"
+
+  expand_span:
+    description: "Разворачивает конкретный аномальный спан"
+    inputs: [trace_id, span_id]
+    returns: {full_input, full_output, metadata}
+    guard: "только если summarize показал аномалию"
+
+  raw_trace:
+    description: "Полный трейс — только для ручного дебага"
+    max_tokens: 50000
+    requires: "явное разрешение в конфиге playbook"

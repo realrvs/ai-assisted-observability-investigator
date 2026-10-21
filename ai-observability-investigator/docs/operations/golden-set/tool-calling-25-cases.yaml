@@ -1,0 +1,50 @@
+# Golden Set: Tool Calling (25 кейсов)
+# Версия: 2.1
+# Порог для Phase 1 (GigaChat-2-Max): > 85%
+# Порог для миграции на GigaChat 3.5 Reasoning: > 90%
+
+metadata:
+  size: 25
+  metric: tool_call_accuracy
+  run_on: [system_prompt_change, model_update]
+
+cases:
+  # --- Простой tool call (5 кейсов) ---
+  - id: tc-001
+    category: simple
+    input: "Найди логи пользователя user_42 за последний час"
+    expected_tool: otel_query
+    expected_args: {user_id: "user_42", timerange: "1h"}
+  - id: tc-002
+    category: simple
+    input: "Покажи трейс abc-123"
+    expected_tool: langfuse_summarize
+    expected_args: {trace_id: "abc-123"}
+  - id: tc-003
+    category: simple
+    input: "Какой p95 latency за последние 30 минут?"
+    expected_tool: prometheus_query
+    expected_args: {metric: "latency_p95", window: "30m"}
+  - id: tc-004
+    category: simple
+    input: "Есть ли активные P1 алерты?"
+    expected_tool: grafana_list_alerts
+    expected_args: {state: "firing", severity: "P1"}
+  - id: tc-005
+    category: simple
+    input: "Найди runbook по ошибкам валидации"
+    expected_tool: runbook_search
+    expected_args: {symptom: "validation_errors"}
+
+  # --- Цепочка из 2-3 tool calls (8 кейсов) ---
+  - id: tc-006
+    category: chain
+    input: "Пользователь 7 получил неверный ответ в 14:32. Найди причину"
+    expected_sequence: [otel_query, langfuse_summarize, prometheus_query]
+
+  # TODO: заполнить остальные 19 кейсов по категориям:
+  # - chain (8 кейсов)
+  # - tool_error (4 кейса)
+  # - parallel (2 кейса)
+  # - multi_tool_selection (3 кейса)
+  # - no_tool_needed (3 кейса)

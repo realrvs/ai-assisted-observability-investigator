@@ -1,0 +1,35 @@
+# Playbook расследования (System Prompt для GigaChat 3.5 Reasoning)
+# Версия: 2.1
+# Используется в src/investigator/agent.py
+
+playbook_investigation:
+  step_1_logs:
+    goal: "Найти логи запроса по user_id или trace_id"
+    tools: [otel_query]
+    extract: [prompt_version, retrieval_metadata, tool_calls]
+
+  step_2_traces:
+    goal: "Восстановить цепочку вызовов"
+    tools: [langfuse_summarize, langfuse_expand_span]
+    extract: [spans, retries, failures]
+
+  step_3_metrics:
+    goal: "Сравнить с baseline"
+    tools: [prometheus_query]
+    extract: [latency_p95, token_usage, error_rates]
+
+  step_4_retrieval:
+    goal: "Проверить качество найденных документов"
+    source: "traces step_2 -> span 'retrieval'"
+    extract: [top_k_docs, relevance_scores]
+
+  step_5_validation:
+    goal: "Проверить schema/policy"
+    tools: [otel_query, prometheus_query]
+    extract: [validation_errors, fallback_triggered]
+
+  output:
+    format: markdown_report_with_evidence_links
+    hypotheses: "min 1, max 3, с confidence score"
+    require_evidence_url: true
+    require_partial_flag_if_degraded: true

@@ -1,0 +1,20 @@
+# Cost Guard: лимиты на одно расследование и на час
+# Версия: 2.1
+
+cost_guard:
+  per_investigation:
+    max_input_tokens: 50000
+    max_output_tokens: 8000
+    max_tool_calls: 15
+    max_wall_time: 120s
+
+  per_hour:
+    max_investigations: 100
+    max_total_tokens: 500000
+
+  on_exceed: "finalize_with_current_evidence"
+
+  model_fallback:
+    trigger: "input_tokens > 30000"
+    model: "T-lite-it-2.1"
+    note: "self-host, без стоимости API"

@@ -1,0 +1,31 @@
+# Конфигурация моделей
+# Версия: 2.1
+
+models:
+  reasoning_primary:
+    name: GigaChat-3.5-Reasoning
+    provider: gigachat
+    base_url: ${GIGACHAT_BASE_URL}
+    context_window: 262000
+    tool_call_format: GCML
+    force_thinking: true
+
+  reasoning_fallback:
+    name: GigaChat-2-Max
+    provider: gigachat
+    base_url: ${GIGACHAT_BASE_URL}
+    context_window: 128000
+    tool_call_format: GCML
+    force_thinking: false
+
+  summarizer:
+    name: T-lite-it-2.1
+    provider: openai_compatible
+    base_url: ${TLITE_BASE_URL}
+    context_window: 32768
+    tool_call_format: openai
+
+  embeddings:
+    name: GigaChat-embeddings
+    provider: gigachat
+    base_url: ${GIGACHAT_BASE_URL}
