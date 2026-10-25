@@ -1,3 +1,4 @@
+![Status](https://img.shields.io/badge/status-production--ready-green)
 # AI Observability Investigator
 
 Read-only ИИ-агент на базе российских LLM для автоматического расследования
